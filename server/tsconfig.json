@@ -2,9 +2,12 @@
     "compilerOptions": {
         "module": "NodeNext",
         "moduleResolution": "nodenext",
-        "target": "ES2020",
+        "target": "ES2015",
         "sourceMap": true,
-        "outDir": "build"
+        "outDir": "./build",
+        "esModuleInterop": true,
+        "noEmit": true,
+        "allowImportingTsExtensions": true
     },
     "include": ["src/**/*"]
 }

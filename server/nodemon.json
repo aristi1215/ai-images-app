@@ -6,10 +6,10 @@
         "coverage"
     ],
     "watch": [
-        "src/"
+        "src"
     ],
-    "ext": "ts,js",
-    "exec": "node --loader ts-node/esm src/index.ts",
+    "ext": "ts",
+    "exec": "ts-node src/index.ts",
     "env": {
         "NODE_ENV": "development"
     }
