@@ -29,12 +29,3 @@ const startServer = async () => {
 };
 
 startServer();
-
-
-app.get("/", async (req, res) => {
-  res.json({ working: "working" });
-});
-
-app.get('/hola', (req,res) => {
-  res.send('holaadsasd')
-})
