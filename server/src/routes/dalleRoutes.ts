@@ -18,9 +18,6 @@ router.route("/").post(async (req, res) => {
   try {
     const { prompt } = req.body;
 
-    console.log('El promptttt:')
-    console.log(req.body)
-
     const response = await openai.images.generate({
       model: "dall-e-3",
       prompt,
@@ -29,7 +26,6 @@ router.route("/").post(async (req, res) => {
       quality: "standard"
     });
 
-    console.log(response)
     const image = response.data[0].url
     res.status(200).json({photo: image})
     

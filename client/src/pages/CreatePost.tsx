@@ -16,8 +16,32 @@ export const CreatePost = () => {
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (form.prompt && form.photo) {
+      setLoading(true);
+      try {
+        await fetch("http://localhost:3000/api/v1/posts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: form.name,
+            prompt: form.prompt,
+            photo: form.photo,
+          }),
+        });
+        navigate("/");
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      console.log("Fill the prompt and the photo");
+    }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,19 +51,22 @@ export const CreatePost = () => {
       try {
         setGeneratingImg(true);
 
-        const response = await fetch("http://localhost:3000/api/v1/dalleRoutes", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ prompt: form.prompt }),
-        });
+        const response = await fetch(
+          "http://localhost:3000/api/v1/dalleRoutes",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ prompt: form.prompt }),
+          }
+        );
         const data = await response.json();
 
         setForm({ ...form, photo: data.photo });
-        console.log(data)
+        console.log(data);
       } catch (err) {
-        console.dir(err, {depth: null});
+        console.dir(err, { depth: null });
       } finally {
         setGeneratingImg(false);
       }
@@ -103,6 +130,7 @@ export const CreatePost = () => {
         <div className="mt-5 flex gap-5 w-full">
           <button
             onClick={generateImage}
+            type="button"
             className="text-white bg-green-700 rounded-md md:w-auto px-2 text-sm w-full py-2.5 text-center cursor-pointer"
           >
             {generatingImg ? "Generating..." : "Generate image"}

@@ -4,6 +4,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import connectDB from "../mongodb/connect.ts";
 import dalleRoutes from "./routes/dalleRoutes.ts";
+import postRoutes from "./routes/postRoutes.ts"
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/api/v1/dalleRoutes", dalleRoutes);
+app.use("/api/v1/posts", postRoutes);
 
 const PORT = process.env.PORT || 3000;
 

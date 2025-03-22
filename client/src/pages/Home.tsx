@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormField } from "../components/FormField";
 import { ImageCard } from "../components/ImageCard";
 import { Loader } from "../components/Loader";
@@ -6,19 +6,36 @@ import { Loader } from "../components/Loader";
 export const Home = () => {
   const [loading, setLoading] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
-  const [searchText, setSearchText] = useState(
-    "Una imagen de un puerco volanding"
-  );
+  const [searchText, setSearchText] = useState("");
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true)
+      try {
+        const response = await fetch("http://localhost:3000/api/v1/posts");
+        const data = await response.json();
+        setAllPosts(data.data);
+      } catch (err) {
+        console.error(err);
+      } finally{
+        setLoading(false)
+      }
+    };
+    fetchPosts();
+  }, []);
 
   const RenderCards = ({
-    data,
+    data=[],
     title,
   }: {
-    data?: { title: string }[];
+    data?: { _id: string, name: string, prompt: string, photo: string}[];
     title: string;
   }) => {
     if (data?.length > 0) {
-      return data.map((post) => <ImageCard key={post.title} />);
+      return data.map((post) => {
+        console.log(post)
+      return <ImageCard key={post._id} name={post.name} photo={post.photo} prompt={post.prompt} />
+    });
     }
 
     return (
@@ -40,9 +57,9 @@ export const Home = () => {
         </p>
       </div>
 
-      {/* <div className="mt-16">
+      <div className="mt-16">
         <FormField />
-      </div> */}
+      </div>
 
       <div>
         {loading ? (
@@ -58,7 +75,11 @@ export const Home = () => {
             )}
 
             <div className="grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3 ">
-              {searchText ? <RenderCards data={[]} title="No search results found" /> : <RenderCards data={[]} title="No posts found" />}
+              {searchText ? (
+                <RenderCards data={allPosts} title="No search results found" />
+              ) : (
+                <RenderCards data={allPosts} title="No posts found" />
+              )}
             </div>
           </>
         )}
